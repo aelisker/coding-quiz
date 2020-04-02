@@ -1,4 +1,4 @@
-var questionLists = [
+var questionList = [
   {
     question: "This is a test question. The answer is B.",
     choices: ['A. This answer', 'B. That Answer', 'C. Maybe this one?', 'D. No it\'s totaly this one'],
@@ -31,8 +31,13 @@ var questionLists = [
   }
 ];
 
+//used for countdown timer and determining score
 var quizTime = 90;
+
+//keeping track of number of questions user gets through
 var questionIndex = 0;
+
+//used to save score for completion
 var userScore = 0;
 
 
@@ -50,41 +55,50 @@ var startTimer = function() {
     }
     if (quizTime === 0) {
       clearInterval(quizCountdown);
-      endQuiz();
+      if (questionIndex !== questionList.length) {
+        endQuiz();
+      }  
     } 
   }, 1000);
 };
 
 var createQuestions = function () {
   var promptAreaEl = document.querySelector("#question-prompt");
-  promptAreaEl.textContent = questionLists[questionIndex].question;
+  promptAreaEl.textContent = questionList[questionIndex].question;
   createAnswers();
 };
 
 var createAnswers = function () {
   var answerAreaEl = document.querySelector("#responses");
   answerAreaEl.innerHTML = "";
-  for (var i = 0; i < questionLists[questionIndex].choices.length; i++) {
+  for (var i = 0; i < questionList[questionIndex].choices.length; i++) {
     var answerButtonsEl = document.createElement("button");
     answerButtonsEl.setAttribute('answerIndex', i);
-    answerButtonsEl.innerHTML = questionLists[questionIndex].choices[i];
+    answerButtonsEl.innerHTML = questionList[questionIndex].choices[i];
     answerAreaEl.appendChild(answerButtonsEl);
   }
   answerAreaEl.addEventListener("click", checkAnswer);
 };
 
 var endQuiz = function () {
+  if (questionIndex == questionList.length) {
+    userScore = quizTime;
+    quizTime = 0;
+    alert("Congratulations! You've made it all the way through with a score of " + userScore + " seconds remaining.");
+  }
+  else {
+    alert("You ran out of time. Better luck next time!");
+  }
+
   //save score
   //compare to high score
-  alert("quiz over");
 };
 
 var checkAnswer = function () {
-  if (event.target.getAttribute('answerIndex') == questionLists[questionIndex].answer) {
+  if (event.target.getAttribute('answerIndex') == questionList[questionIndex].answer) {
     alert("correct");
-    userScore++;
     questionIndex++;
-    if (questionIndex < questionLists.length) {
+    if (questionIndex < questionList.length) {
       createQuestions();
     }
     else {
@@ -106,7 +120,6 @@ var startQuiz = function() {
     alert('TEST');
     quizTime = 0;
   }
-
 };
 
 // Add event listener to generate button
