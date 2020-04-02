@@ -8,10 +8,30 @@ var questionLists = [
     question: "This is a test question. The answer is A.",
     choices: ['A. This answer', 'B. That Answer', 'C. Maybe this one?', 'D. No it\'s totaly this one'],
     answer: 0
+  },
+  {
+    question: "This is a test question. The answer is D.",
+    choices: ['A. This answer', 'B. That Answer', 'C. Maybe this one?', 'D. No it\'s totaly this one'],
+    answer: 3
+  },
+  {
+    question: "This is a test question. The answer is A.",
+    choices: ['A. This answer', 'B. That Answer', 'C. Maybe this one?', 'D. No it\'s totaly this one'],
+    answer: 0
+  },
+  {
+    question: "This is a test question. The answer is C.",
+    choices: ['A. This answer', 'B. That Answer', 'C. Maybe this one?', 'D. No it\'s totaly this one'],
+    answer: 2
+  },
+  {
+    question: "This is a test question. The answer is A.",
+    choices: ['A. This answer', 'B. That Answer', 'C. Maybe this one?', 'D. No it\'s totaly this one'],
+    answer: 0
   }
 ];
 
-var quizTime = 15;
+var quizTime = 90;
 var questionIndex = 0;
 var userScore = 0;
 
@@ -43,6 +63,7 @@ var createQuestions = function () {
 
 var createAnswers = function () {
   var answerAreaEl = document.querySelector("#responses");
+  answerAreaEl.innerHTML = "";
   for (var i = 0; i < questionLists[questionIndex].choices.length; i++) {
     var answerButtonsEl = document.createElement("button");
     answerButtonsEl.setAttribute('answerIndex', i);
@@ -62,6 +83,13 @@ var checkAnswer = function () {
   if (event.target.getAttribute('answerIndex') == questionLists[questionIndex].answer) {
     alert("correct");
     userScore++;
+    questionIndex++;
+    if (questionIndex < questionLists.length) {
+      createQuestions();
+    }
+    else {
+      endQuiz();
+    }
   }
   else {
     alert("Incorrect");
