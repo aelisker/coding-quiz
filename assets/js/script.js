@@ -11,8 +11,9 @@ var questionLists = [
   }
 ];
 
-var quizTime = 5;
+var quizTime = 15;
 var questionIndex = 0;
+var userScore = 0;
 
 
 
@@ -22,10 +23,14 @@ var startTimer = function() {
   
   //start timer with setInterval. Use text content to show time on page
   var quizCountdown = setInterval(function() {
-    pageElement.textContent = "You have " + quizTime + " seconds left!";
     quizTime--;
-    if (quizTime == -1) {
+    pageElement.textContent = "You have " + quizTime + " seconds left!";
+    if (quizTime < 0) {
+      quizTime = 0;
+    }
+    if (quizTime === 0) {
       clearInterval(quizCountdown);
+      endQuiz();
     } 
   }, 1000);
 };
@@ -44,22 +49,24 @@ var createAnswers = function () {
     answerButtonsEl.innerHTML = questionLists[questionIndex].choices[i];
     answerAreaEl.appendChild(answerButtonsEl);
   }
-  
   answerAreaEl.addEventListener("click", checkAnswer);
+};
 
+var endQuiz = function () {
+  //save score
+  //compare to high score
+  alert("quiz over");
 };
 
 var checkAnswer = function () {
   if (event.target.getAttribute('answerIndex') == questionLists[questionIndex].answer) {
     alert("correct");
+    userScore++;
   }
-  
-  // for(var i = 0; i < questionLists[questionIndex].choices.length; i++) {
-  //   document.querySelector("#answerButton" + i).addEventListener("click", function() {
-      
-  //   });
-  // }
-  
+  else {
+    alert("Incorrect");
+    quizTime = quizTime - 5;
+  } 
 };
 
 var startQuiz = function() {
@@ -69,6 +76,7 @@ var startQuiz = function() {
 
   if (quizTime == -1) {
     alert('TEST');
+    quizTime = 0;
   }
 
 };
