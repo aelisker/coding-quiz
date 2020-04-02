@@ -1,6 +1,22 @@
-var quizTime = 5;
+var questionLists = [
+  {
+    question: "This is a test question. The answer is B.",
+    choices: ['A. This answer', 'B. That Answer', 'C. Maybe this one?', 'D. No it\'s totaly this one'],
+    answer: 1
+  },
+  {
+    question: "This is a test question. The answer is A.",
+    choices: ['A. This answer', 'B. That Answer', 'C. Maybe this one?', 'D. No it\'s totaly this one'],
+    answer: 0
+  }
+];
 
-var startTimer = function(test) {
+var quizTime = 5;
+var questionIndex = 0;
+
+
+
+var startTimer = function() {
   //find id of countdown-timer in html, declare as variable
   var pageElement = document.querySelector("#countdown-timer");
   
@@ -12,13 +28,48 @@ var startTimer = function(test) {
       clearInterval(quizCountdown);
     } 
   }, 1000);
+};
+
+var createQuestions = function () {
+  var promptAreaEl = document.querySelector("#question-prompt");
+  promptAreaEl.textContent = questionLists[questionIndex].question;
+  createAnswers();
+};
+
+var createAnswers = function () {
+  var answerAreaEl = document.querySelector("#responses");
+  for (var i = 0; i < questionLists[questionIndex].choices.length; i++) {
+    var answerButtonsEl = document.createElement("button");
+    answerButtonsEl.setAttribute('answerIndex', i);
+    answerButtonsEl.innerHTML = questionLists[questionIndex].choices[i];
+    answerAreaEl.appendChild(answerButtonsEl);
+  }
+  
+  answerAreaEl.addEventListener("click", checkAnswer);
+
+};
+
+var checkAnswer = function () {
+  if (event.target.getAttribute('answerIndex') == questionLists[questionIndex].answer) {
+    alert("correct");
+  }
+  
+  // for(var i = 0; i < questionLists[questionIndex].choices.length; i++) {
+  //   document.querySelector("#answerButton" + i).addEventListener("click", function() {
       
-
-
+  //   });
+  // }
+  
 };
 
 var startQuiz = function() {
   startTimer(); 
+
+  createQuestions();
+
+  if (quizTime == -1) {
+    alert('TEST');
+  }
 
 };
 
