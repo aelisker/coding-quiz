@@ -32,7 +32,7 @@ var questionList = [
 ];
 
 //used for countdown timer and determining score
-var quizTime = 90;
+var quizTime = 30;
 
 //keeping track of number of questions user gets through
 var questionIndex = 0;
@@ -40,7 +40,17 @@ var questionIndex = 0;
 //used to save score for completion
 var userScore = 0;
 
+var savedScores = [];
 
+var startQuiz = function() {
+  startTimer(); 
+
+  createQuestions();
+
+  //after start, remove start button
+  var startButton = document.querySelector("#start");
+  startButton.remove();
+};
 
 var startTimer = function() {
   //find id of countdown-timer in html, declare as variable
@@ -53,8 +63,10 @@ var startTimer = function() {
     if (quizTime < 0) {
       quizTime = 0;
     }
+    //end quiz when time reaches zero
     if (quizTime === 0) {
       clearInterval(quizCountdown);
+      //only run endQuiz if time expires. If questionIndex is same length as array, user has cycled through all questions and already run endQuiz
       if (questionIndex !== questionList.length) {
         endQuiz();
       }  
@@ -62,14 +74,17 @@ var startTimer = function() {
   }, 1000);
 };
 
+//print question to page
 var createQuestions = function () {
   var promptAreaEl = document.querySelector("#question-prompt");
   promptAreaEl.textContent = questionList[questionIndex].question;
   createAnswers();
 };
 
+//create answer buttons
 var createAnswers = function () {
   var answerAreaEl = document.querySelector("#responses");
+  //clear answerAreaEl for next set of questions on loop
   answerAreaEl.innerHTML = "";
   for (var i = 0; i < questionList[questionIndex].choices.length; i++) {
     var answerButtonsEl = document.createElement("button");
@@ -80,21 +95,28 @@ var createAnswers = function () {
   answerAreaEl.addEventListener("click", checkAnswer);
 };
 
-var endQuiz = function () {
-  if (questionIndex == questionList.length) {
-    userScore = quizTime;
-    quizTime = 0;
-    alert("Congratulations! You've made it all the way through with a score of " + userScore + " seconds remaining.");
-  }
-  else {
-    alert("You ran out of time. Better luck next time!");
-  }
+// var loadScores = function() {
+//     // 1 get task items from localStorage
+//     // 2 converts tasks from stringified format back into array of objects
+//     // 3 iterates through tasks array and creates task elements on the page from it
 
-  //save score
-  //compare to high score
-};
+//     savedScores = localStorage.getItem("scores");
 
+//     if (!savedScores) {
+//         return false;
+//     }  
+    
+//     savedScores = JSON.parse(savedScores);
+
+//     for (var i = 0; i < savedTasks.length; i++) {
+//         //pass each task object in the createTaskEl function
+//         createTaskEl(savedTasks[i]);
+//     }
+// };
+
+//check answer for correct or incorrect as well as quiz end
 var checkAnswer = function () {
+  //does the answerIndex value we set match with answer in array?
   if (event.target.getAttribute('answerIndex') == questionList[questionIndex].answer) {
     alert("correct");
     questionIndex++;
@@ -111,15 +133,79 @@ var checkAnswer = function () {
   } 
 };
 
-var startQuiz = function() {
-  startTimer(); 
-
-  createQuestions();
-
-  if (quizTime == -1) {
-    alert('TEST');
+var endQuiz = function () {
+  //if index and array length match, user has got through all questions
+  if (questionIndex == questionList.length) {
+    userScore = quizTime;
     quizTime = 0;
+    alert("Congratulations! You've made it all the way through with a score of " + userScore + " seconds remaining.");
+    saveScore();
   }
+  else {
+    alert("You ran out of time. Better luck next time!");
+  }
+
+  //save score
+  //compare to high score
+};
+
+var saveScore = function () {
+  if (savedScores.length > 2) {
+    for (var i = 0; i < 3; i++) {
+      savedScoreInt = parseInt(savedScores[i].score);
+      if (savedScoreInt < userScore) {
+        saveUserScore();
+        break;
+      }
+      else {
+        //need to say sorry not high enough
+        alert("Sorry! You were not top three!");
+      }
+    }
+  }
+  else {
+    saveUserScore();
+  }
+};
+
+var saveUserScore = function() {
+  var userScoreDivEl = document.querySelector("#responses");
+
+  //create label
+  var userScoreLabelEl = document.createElement("h2");
+  userScoreLabelEl.textContent = 'You are in the top three for highscore! Enter your initials below.';
+  userScoreDivEl.appendChild(userScoreLabelEl);
+
+  //create input
+  var userScoreInputEl = document.createElement("input");
+  userScoreInputEl.setAttribute('type', 'text');
+  userScoreInputEl.setAttribute('id', 'initials');
+  userScoreInputEl.setAttribute('class', 'text-input');
+  userScoreInputEl.setAttribute('placeholder', 'Enter initials here');
+  userScoreDivEl.appendChild(userScoreInputEl);
+
+  //create button
+  var userScoreButtonEl = document.createElement("button");
+  userScoreButtonEl.className = "btn score-button";
+  userScoreButtonEl.setAttribute('value', 'submit');
+  userScoreButtonEl.setAttribute('id', 'save-score');
+  userScoreButtonEl.textContent = 'Submit Score!';
+  userScoreDivEl.appendChild(userScoreButtonEl);
+
+  var userInitialInput = document.querySelector("#initials").value;
+  var currentScore = {
+    initials: userInitialInput,
+    score: userScore
+  };
+  savedScores.push(currentScore);
+
+  var submitButtonEl = document.querySelector("#save-score");
+  submitButtonEl.addEventListener("click", function() {
+    localStorage.setItem("scores", JSON.stringify(savedScores));
+    userScoreInputEl.remove();
+    userScoreButtonEl.remove();
+  });
+
 };
 
 // Add event listener to generate button
