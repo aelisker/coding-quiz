@@ -84,6 +84,7 @@ var createQuestions = function () {
 //create answer buttons
 var createAnswers = function () {
   var answerAreaEl = document.querySelector("#responses");
+  var answerButtonAreaEl = document.createElement("div");
   //clear answerAreaEl for next set of questions on loop
   answerAreaEl.innerHTML = "";
   for (var i = 0; i < questionList[questionIndex].choices.length; i++) {
@@ -91,9 +92,10 @@ var createAnswers = function () {
     answerButtonsEl.setAttribute('answerIndex', i);
     answerButtonsEl.className = 'btn answer-btn';
     answerButtonsEl.innerHTML = questionList[questionIndex].choices[i];
-    answerAreaEl.appendChild(answerButtonsEl);
+    answerButtonAreaEl.appendChild(answerButtonsEl);
+    answerAreaEl.appendChild(answerButtonAreaEl);
   }
-  answerAreaEl.addEventListener("click", checkAnswer);
+  answerButtonAreaEl.addEventListener("click", checkAnswer);
 };
 
 //check answer for correct or incorrect as well as quiz end
@@ -191,9 +193,9 @@ var saveUserScore = function() {
 
   //if we already have three scores, replace the lowest with current
   if (savedScores && savedScores.length == 3) {
-    var intScores = parseInt(savedScores);
-    intScores.sort(function(a, b){return a-b});
-    if (intScores[0] < userScore) {
+    // var intScores = parseInt(savedScores);
+    savedScores.score.sort(function(a, b){return a-b});
+    if (savedScores[0].score < userScore) {
       savedScores.splice(0, 1, currentScore);
     }
   }
@@ -215,14 +217,16 @@ var loadScores = function() {
     // 1 get task items from localStorage
     // 2 converts tasks from stringified format back into array of objects
     // 3 iterates through tasks array and creates task elements on the page from it
-    savedScores = [];
-    savedScores = localStorage.getItem("scores");
-
-    if (!savedScores) {
-        return false;
-    }  
     
-    savedScores = JSON.parse(savedScores);
+    var isArrayNull = localStorage.getItem("scores");
+    if (isArrayNull) {
+      savedScores = localStorage.getItem("scores");
+      savedScores = JSON.parse(savedScores);
+    }
+
+    // if (savedScores && savedScores.length > 0) {
+      
+    // }
 
     // for (var i = 0; i < savedTasks.length; i++) {
     //     //pass each task object in the createTaskEl function
@@ -234,6 +238,7 @@ var loadScores = function() {
 start.addEventListener("click", startQuiz);
 
 loadScores();
+
 
 
 // var formEl = document.querySelector("#task-form");
