@@ -31,6 +31,8 @@ var questionList = [
   }
 ];
 
+var savedScores = [];
+
 //used for countdown timer and determining score
 var quizTime = 30;
 
@@ -39,8 +41,6 @@ var questionIndex = 0;
 
 //used to save score for completion
 var userScore = 0;
-
-var savedScores = [];
 
 var startQuiz = function() {
   startTimer(); 
@@ -89,30 +89,12 @@ var createAnswers = function () {
   for (var i = 0; i < questionList[questionIndex].choices.length; i++) {
     var answerButtonsEl = document.createElement("button");
     answerButtonsEl.setAttribute('answerIndex', i);
+    answerButtonsEl.className = 'btn answer-btn';
     answerButtonsEl.innerHTML = questionList[questionIndex].choices[i];
     answerAreaEl.appendChild(answerButtonsEl);
   }
   answerAreaEl.addEventListener("click", checkAnswer);
 };
-
-// var loadScores = function() {
-//     // 1 get task items from localStorage
-//     // 2 converts tasks from stringified format back into array of objects
-//     // 3 iterates through tasks array and creates task elements on the page from it
-
-//     savedScores = localStorage.getItem("scores");
-
-//     if (!savedScores) {
-//         return false;
-//     }  
-    
-//     savedScores = JSON.parse(savedScores);
-
-//     for (var i = 0; i < savedTasks.length; i++) {
-//         //pass each task object in the createTaskEl function
-//         createTaskEl(savedTasks[i]);
-//     }
-// };
 
 //check answer for correct or incorrect as well as quiz end
 var checkAnswer = function () {
@@ -134,33 +116,42 @@ var checkAnswer = function () {
 };
 
 var endQuiz = function () {
+  //remove answer buttons as quiz
+  var answerButtonsEl = document.querySelectorAll(".answer-btn");
+  for (var i = 0; i < answerButtonsEl.length; i++) {
+    answerButtonsEl[i].remove();
+  }
+
   //if index and array length match, user has got through all questions
   if (questionIndex == questionList.length) {
     userScore = quizTime;
     quizTime = 0;
     alert("Congratulations! You've made it all the way through with a score of " + userScore + " seconds remaining.");
-    saveScore();
+    checkSavedScores();
   }
   else {
     alert("You ran out of time. Better luck next time!");
+
+    //add try again button
   }
 
-  //save score
   //compare to high score
 };
 
-var saveScore = function () {
-  if (savedScores.length > 2) {
+var checkSavedScores = function () {
+  if (savedScores && savedScores.length == 3) {
+    var topThree = false;
     for (var i = 0; i < 3; i++) {
       savedScoreInt = parseInt(savedScores[i].score);
       if (savedScoreInt < userScore) {
+        topThree = true;
         saveUserScore();
         break;
       }
-      else {
-        //need to say sorry not high enough
-        alert("Sorry! You were not top three!");
-      }
+    }
+    if (!topThree) {
+      //need to say sorry not high enough
+      alert("Sorry! You were not top three!");
     }
   }
   else {
@@ -197,8 +188,20 @@ var saveUserScore = function() {
     initials: userInitialInput,
     score: userScore
   };
-  savedScores.push(currentScore);
 
+  //if we already have three scores, replace the lowest with current
+  if (savedScores && savedScores.length == 3) {
+    var intScores = parseInt(savedScores);
+    intScores.sort(function(a, b){return a-b});
+    if (intScores[0] < userScore) {
+      savedScores.splice(0, 1, currentScore);
+    }
+  }
+  else {
+    savedScores.push(currentScore);
+  }
+
+  //save score to localstorage
   var submitButtonEl = document.querySelector("#save-score");
   submitButtonEl.addEventListener("click", function() {
     localStorage.setItem("scores", JSON.stringify(savedScores));
@@ -208,8 +211,29 @@ var saveUserScore = function() {
 
 };
 
+var loadScores = function() {
+    // 1 get task items from localStorage
+    // 2 converts tasks from stringified format back into array of objects
+    // 3 iterates through tasks array and creates task elements on the page from it
+    savedScores = [];
+    savedScores = localStorage.getItem("scores");
+
+    if (!savedScores) {
+        return false;
+    }  
+    
+    savedScores = JSON.parse(savedScores);
+
+    // for (var i = 0; i < savedTasks.length; i++) {
+    //     //pass each task object in the createTaskEl function
+    //     createTaskEl(savedTasks[i]);
+    // }
+};
+
 // Add event listener to generate button
 start.addEventListener("click", startQuiz);
+
+loadScores();
 
 
 // var formEl = document.querySelector("#task-form");
