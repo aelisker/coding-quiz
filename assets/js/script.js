@@ -194,10 +194,23 @@ var saveUserScore = function() {
   //if we already have three scores, replace the lowest with current
   if (savedScores && savedScores.length == 3) {
     // var intScores = parseInt(savedScores);
-    savedScores.score.sort(function(a, b){return a-b});
-    if (savedScores[0].score < userScore) {
+
+    //NEED TO FIGURE THIS OUT
+    var arrayForSorting = [savedScores[0].score, savedScores[1].score, savedScores[2].score];
+    sortedArray = arrayForSorting.sort(function(a, b){return a-b});
+    if (sortedArray < userScore) {
       savedScores.splice(0, 1, currentScore);
     }
+
+    // var arrayItemReplaced = false
+    // for (var i = 0; i < 3; i++) {
+    //   if (!arrayItemReplaced && savedScores[i].score < userScore) {
+    //     savedScores.splice(i, 1, currentScore);
+    //     arrayItemReplaced = true;
+    //   }
+    // }
+    // savedScores.score.sort(function(a, b){return a-b});
+    
   }
   else {
     savedScores.push(currentScore);
