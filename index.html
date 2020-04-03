@@ -8,23 +8,26 @@
     <link rel="stylesheet" href="./assets/css/style.css" />
   </head>
   <body>
+    <header>
+      <div class="view-highscores">
+        <h3>View Highscores!</h3>
+      </div>
+      <h1>Coding Quiz</h1>
+      <div class="time-area">
+        <textarea
+          readonly
+          id="countdown-timer"
+          placeholder="You have 40 seconds left!"
+        ></textarea>
+      </div>
+    </header>
     <div class="wrapper">
-      <header>
-        <h1>Coding Quiz</h1>
-      </header>
       <div class="card">
         <div class="card-header">
           <h2 id="question-prompt">Test your Javascript knowledge</h2>
         </div>
-        <div class="card-body">
-          <textarea
-            readonly
-            id="countdown-timer"
-            placeholder="Click start when ready!"
-          ></textarea>
-        </div>
-        <div id='responses'></div>
         <div class="answer-area">
+          <div id='responses'></div>
           <button id="start" class="btn">Start Quiz!</button>
         </div>
       </div>
