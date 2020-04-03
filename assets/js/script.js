@@ -164,12 +164,12 @@ var checkSavedScores = function () {
 var saveUserScore = function() {
   var userScoreDivEl = document.querySelector("#responses");
 
-  //create label
+  //create label for entering score
   var userScoreLabelEl = document.createElement("h2");
   userScoreLabelEl.textContent = 'You are in the top three for highscore! Enter your initials below.';
   userScoreDivEl.appendChild(userScoreLabelEl);
 
-  //create input
+  //create input field for initials
   var userScoreInputEl = document.createElement("input");
   userScoreInputEl.setAttribute('type', 'text');
   userScoreInputEl.setAttribute('id', 'initials');
@@ -177,7 +177,7 @@ var saveUserScore = function() {
   userScoreInputEl.setAttribute('placeholder', 'Enter initials here');
   userScoreDivEl.appendChild(userScoreInputEl);
 
-  //create button
+  //create button for submitting scores
   var userScoreButtonEl = document.createElement("button");
   userScoreButtonEl.className = "btn score-button";
   userScoreButtonEl.setAttribute('value', 'submit');
@@ -193,30 +193,30 @@ var saveUserScore = function() {
 
   //if we already have three scores, replace the lowest with current
   if (savedScores && savedScores.length == 3) {
-    // var intScores = parseInt(savedScores);
 
-    //NEED TO FIGURE THIS OUT
+    //create array with current scores, sort by lowest first, find out if current score is higher
     var arrayForSorting = [savedScores[0].score, savedScores[1].score, savedScores[2].score];
     sortedArray = arrayForSorting.sort(function(a, b){return a-b});
-    if (sortedArray < userScore) {
-      savedScores.splice(0, 1, currentScore);
+    if (sortedArray[0] < userScore) {
+      //since current score is higher, find out which current array item needs to be replaced
+      if (savedScores[0].score < savedScores[1].score && savedScores[0].score < savedScores[2].score) {
+        savedScores.splice(0, 1, currentScore);
+      }
+      else if (savedScores[1].score < savedScores[0].score && savedScores[1].score < savedScores[2].score) {
+        savedScores.splice(1, 1, currentScore);
+      }
+      else {
+        savedScores.splice(2, 1, currentScore);
+      }
+      
     }
-
-    // var arrayItemReplaced = false
-    // for (var i = 0; i < 3; i++) {
-    //   if (!arrayItemReplaced && savedScores[i].score < userScore) {
-    //     savedScores.splice(i, 1, currentScore);
-    //     arrayItemReplaced = true;
-    //   }
-    // }
-    // savedScores.score.sort(function(a, b){return a-b});
-    
   }
+  //if we don't have three saved scores, safe to save current with no other criteria checks
   else {
     savedScores.push(currentScore);
   }
 
-  //save score to localstorage
+  //save score to localstorage, remove buttons to avoid duplicate saves
   var submitButtonEl = document.querySelector("#save-score");
   submitButtonEl.addEventListener("click", function() {
     localStorage.setItem("scores", JSON.stringify(savedScores));
@@ -227,24 +227,12 @@ var saveUserScore = function() {
 };
 
 var loadScores = function() {
-    // 1 get task items from localStorage
-    // 2 converts tasks from stringified format back into array of objects
-    // 3 iterates through tasks array and creates task elements on the page from it
-    
+    //load scored only if array is not a null value, otherwise function breaks
     var isArrayNull = localStorage.getItem("scores");
     if (isArrayNull) {
       savedScores = localStorage.getItem("scores");
       savedScores = JSON.parse(savedScores);
     }
-
-    // if (savedScores && savedScores.length > 0) {
-      
-    // }
-
-    // for (var i = 0; i < savedTasks.length; i++) {
-    //     //pass each task object in the createTaskEl function
-    //     createTaskEl(savedTasks[i]);
-    // }
 };
 
 // Add event listener to generate button
