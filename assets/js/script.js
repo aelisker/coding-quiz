@@ -32,6 +32,7 @@ var questionList = [
 ];
 
 var promptAreaEl = document.querySelector("#question-prompt");
+var answerAreaEl = document.querySelector("#responses");
 
 var savedScores = [];
 
@@ -45,13 +46,19 @@ var questionIndex = 0;
 var userScore = 0;
 
 var startQuiz = function() {
-  startTimer(); 
+  //set variables to start
+  questionIndex = 0;
+  userScore = 0;
+  quizTime = 75;
 
+  startTimer(); 
   createQuestions();
 
   //after start, remove start button
   var startButton = document.querySelector("#start");
-  startButton.remove();
+  if (startButton) {  
+    startButton.remove();
+  }
 };
 
 var startTimer = function() {
@@ -84,8 +91,6 @@ var createQuestions = function () {
 
 //create answer buttons
 var createAnswers = function () {
-  var answerAreaEl = document.querySelector("#responses");
-  var answerButtonAreaEl = document.createElement("div");
   //clear answerAreaEl for next set of questions on loop
   answerAreaEl.innerHTML = "";
   for (var i = 0; i < questionList[questionIndex].choices.length; i++) {
@@ -93,10 +98,9 @@ var createAnswers = function () {
     answerButtonsEl.setAttribute('answerIndex', i);
     answerButtonsEl.className = 'btn answer-btn';
     answerButtonsEl.innerHTML = questionList[questionIndex].choices[i];
-    answerButtonAreaEl.appendChild(answerButtonsEl);
-    answerAreaEl.appendChild(answerButtonAreaEl);
+    answerAreaEl.appendChild(answerButtonsEl);
   }
-  answerButtonAreaEl.addEventListener("click", checkAnswer);
+  answerAreaEl.addEventListener("click", checkAnswer);
 };
 
 //check answer for correct or incorrect as well as quiz end
@@ -111,6 +115,9 @@ var checkAnswer = function () {
     else {
       endQuiz();
     }
+  }
+  else if (event.target.innerHTML === 'Try again?') {
+    return;
   }
   else {
     alert("Incorrect");
@@ -132,9 +139,10 @@ var endQuiz = function () {
     checkSavedScores();
   }
   else {
-    alert("You ran out of time. Better luck next time!");
-
+    promptAreaEl.textContent = 'You ran out of time. Better luck next time!';
+    
     //add try again button
+    tryAgain();
   }
 
   //compare to high score
@@ -154,6 +162,7 @@ var checkSavedScores = function () {
     if (!topThree) {
       //need to say sorry not high enough
       promptAreaEl.textContent = "Congratulations on making it through the quiz! Keep trying to get your score in the top three so you can save your highscore!";
+      tryAgain();
     }
   }
   else {
@@ -161,7 +170,19 @@ var checkSavedScores = function () {
   }
 };
 
-var saveUserScore = function() {
+// create try again button that clears existing user score, question index
+var tryAgain = function () {
+  //create button for try again
+  var tryAgainEl = document.createElement("button");
+  tryAgainEl.className = 'btn';
+  tryAgainEl.textContent = 'Try again?';
+  answerAreaEl.appendChild(tryAgainEl);
+
+  //call start function on click
+  tryAgainEl.addEventListener("click", startQuiz);
+};
+
+var saveUserScore = function () {
   var userScoreDivEl = document.querySelector("#responses");
 
   promptAreaEl.textContent = "Congratulations on making it all the way through! Your score of " + userScore + " puts you in the top three. Enter your initials below.";
@@ -224,11 +245,11 @@ var saveUserScore = function() {
     userScoreInputEl.remove();
     userScoreButtonEl.remove();
     promptAreaEl.innerHTML = 'Thank you for playing!';
+    tryAgain();
   });
-
 };
 
-var loadScores = function() {
+var loadScores = function () {
     //load scored only if array is not a null value, otherwise function breaks
     var isArrayNull = localStorage.getItem("scores");
     if (isArrayNull) {
