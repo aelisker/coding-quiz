@@ -31,10 +31,12 @@ var questionList = [
   }
 ];
 
+var promptAreaEl = document.querySelector("#question-prompt");
+
 var savedScores = [];
 
 //used for countdown timer and determining score
-var quizTime = 50;
+var quizTime = 75;
 
 //keeping track of number of questions user gets through
 var questionIndex = 0;
@@ -76,7 +78,6 @@ var startTimer = function() {
 
 //print question to page
 var createQuestions = function () {
-  var promptAreaEl = document.querySelector("#question-prompt");
   promptAreaEl.textContent = questionList[questionIndex].question;
   createAnswers();
 };
@@ -128,7 +129,6 @@ var endQuiz = function () {
   if (questionIndex == questionList.length) {
     userScore = quizTime;
     quizTime = 0;
-    alert("Congratulations! You've made it all the way through with a score of " + userScore + " seconds remaining.");
     checkSavedScores();
   }
   else {
@@ -153,7 +153,7 @@ var checkSavedScores = function () {
     }
     if (!topThree) {
       //need to say sorry not high enough
-      alert("Sorry! You were not top three!");
+      promptAreaEl.textContent = "Congratulations on making it through the quiz! Keep trying to get your score in the top three so you can save your highscore!";
     }
   }
   else {
@@ -164,10 +164,7 @@ var checkSavedScores = function () {
 var saveUserScore = function() {
   var userScoreDivEl = document.querySelector("#responses");
 
-  //create label for entering score
-  var userScoreLabelEl = document.createElement("h2");
-  userScoreLabelEl.textContent = 'You are in the top three for highscore! Enter your initials below.';
-  userScoreDivEl.appendChild(userScoreLabelEl);
+  promptAreaEl.textContent = "Congratulations on making it all the way through! Your score of " + userScore + " puts you in the top three. Enter your initials below.";
 
   //create input field for initials
   var userScoreInputEl = document.createElement("input");
@@ -226,6 +223,7 @@ var saveUserScore = function() {
     localStorage.setItem("scores", JSON.stringify(savedScores));
     userScoreInputEl.remove();
     userScoreButtonEl.remove();
+    promptAreaEl.innerHTML = 'Thank you for playing!';
   });
 
 };
