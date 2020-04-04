@@ -130,6 +130,8 @@ var printCheck = function (trueOrFalse) {
   checkAreaEl.setAttribute('id', 'true-or-false');
   var wrapper = document.querySelector(".wrapper");
 
+  clearInterval(printTrueOrFalse);
+
   var printTrueOrFalse = setInterval(function () {
     if (trueOrFalse === true) {
       answerCheckEl.textContent = 'Correct!';
