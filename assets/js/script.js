@@ -33,17 +33,15 @@ var questionList = [
 
 var promptAreaEl = document.querySelector("#question-prompt");
 var answerAreaEl = document.querySelector("#responses");
+var answerCheckEl = document.createElement("h3");
 
 var savedScores = [];
-
-//used for countdown timer and determining score
 var quizTime = 75;
-
-//keeping track of number of questions user gets through
 var questionIndex = 0;
-
-//used to save score for completion
 var userScore = 0;
+
+//setInterval using 100 milliseconds so using 25 for 2.5 seconds to show correct/incorrect
+var promptTime = 25;
 
 var startQuiz = function() {
   //set variables to start
@@ -107,7 +105,8 @@ var createAnswers = function () {
 var checkAnswer = function () {
   //does the answerIndex value we set match with answer in array?
   if (event.target.getAttribute('answerIndex') == questionList[questionIndex].answer) {
-    alert("correct");
+    promptTime = 25;
+    printCheck(true);
     questionIndex++;
     if (questionIndex < questionList.length) {
       createQuestions();
@@ -120,9 +119,34 @@ var checkAnswer = function () {
     return;
   }
   else {
-    alert("Incorrect");
+    promptTime = 25;
+    printCheck(false);
     quizTime = quizTime - 5;
   } 
+};
+
+var printCheck = function (trueOrFalse) {
+  var checkAreaEl = document.createElement("div");
+  checkAreaEl.setAttribute('id', 'true-or-false');
+  var wrapper = document.querySelector(".wrapper");
+
+  var printTrueOrFalse = setInterval(function () {
+    if (trueOrFalse === true) {
+      answerCheckEl.textContent = 'Correct!';
+      checkAreaEl.appendChild(answerCheckEl);
+      wrapper.appendChild(checkAreaEl);
+    }
+    else {
+      answerCheckEl.textContent = 'Incorrect';
+      checkAreaEl.appendChild(answerCheckEl);
+      wrapper.appendChild(checkAreaEl);
+    }
+    if (promptTime < 1) {
+      answerCheckEl.textContent = '';
+      clearInterval(printTrueOrFalse);
+    }
+    promptTime--;
+  }, 100);
 };
 
 var endQuiz = function () {
@@ -144,8 +168,6 @@ var endQuiz = function () {
     //add try again button
     tryAgain();
   }
-
-  //compare to high score
 };
 
 var checkSavedScores = function () {
@@ -173,13 +195,17 @@ var checkSavedScores = function () {
 // create try again button that clears existing user score, question index
 var tryAgain = function () {
   //create button for try again
+  var tryAgainAreaEl = document.querySelector(".answer-area");
   var tryAgainEl = document.createElement("button");
   tryAgainEl.className = 'btn';
   tryAgainEl.textContent = 'Try again?';
-  answerAreaEl.appendChild(tryAgainEl);
+  tryAgainAreaEl.appendChild(tryAgainEl);
 
-  //call start function on click
-  tryAgainEl.addEventListener("click", startQuiz);
+  //call start function on click, remove try again button
+  tryAgainEl.addEventListener("click", function() {
+    tryAgainEl.remove();
+    startQuiz();
+  });
 };
 
 var saveUserScore = function () {

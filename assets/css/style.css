@@ -84,8 +84,6 @@ textarea {
   padding: 30px 40px;
 }
 
-
-
 .card-header::after {
   content: " ";
   display: block;
@@ -100,19 +98,9 @@ textarea {
   justify-content: center;
 }
 
-/* .answer-area::before {
-  content: " ";
-  display: block;
-  width: 100%;
-  background: #e7e9eb;
-  height: 2px;
+#true-or-false {
+  text-align: center;
 }
-
-.answer-area::after {
-  content: " ";
-  display: block;
-  clear: both;
-} */
 
 .btn {
   border: none;
