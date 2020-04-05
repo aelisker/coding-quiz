@@ -9,7 +9,7 @@ var clearScores = function () {
   loadScores();
 }
 
- //sort function taken from https://www.educative.io/edpresso/how-to-sort-an-array-of-objects-in-javascript
+//sort function taken from https://www.educative.io/edpresso/how-to-sort-an-array-of-objects-in-javascript
 var sortScores = function () {
   function dynamicsort(property,order) {
     var sort_order = 1;
