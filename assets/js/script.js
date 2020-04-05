@@ -40,8 +40,8 @@ var quizTime = 75;
 var questionIndex = 0;
 var userScore = 0;
 
-//setInterval using 100 milliseconds so using 25 for 2.5 seconds to show correct/incorrect
-var promptTime = 25;
+//setInterval using 100 milliseconds so using 5 for .5 seconds to show correct/incorrect
+var promptTime = 5;
 
 var startQuiz = function() {
   //set variables to start
@@ -105,7 +105,7 @@ var createAnswers = function () {
 var checkAnswer = function () {
   //does the answerIndex value we set match with answer in array?
   if (event.target.getAttribute('answerIndex') == questionList[questionIndex].answer) {
-    promptTime = 25;
+    promptTime = 5;
     printCheck(true);
     questionIndex++;
     if (questionIndex < questionList.length) {
@@ -119,7 +119,7 @@ var checkAnswer = function () {
     return;
   }
   else {
-    promptTime = 25;
+    promptTime = 5;
     printCheck(false);
     quizTime = quizTime - 5;
   } 
