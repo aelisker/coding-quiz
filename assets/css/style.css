@@ -66,9 +66,10 @@ textarea {
 
 #responses {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr, 1fr;
   grid-template-rows: repeat(2, 1fr);
-  grid-gap: 10px;
+  grid-auto-flow: column;
+  grid-gap: 1px;
 }
 
 .card {
@@ -80,7 +81,7 @@ textarea {
   color: hsl(206, 17%, 28%);
   font-size: 18px;
   margin: 0 auto;
-  max-width: 800px;
+  max-width: 80%;
   padding: 30px 40px;
 }
 

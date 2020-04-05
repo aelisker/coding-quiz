@@ -1,33 +1,33 @@
 var questionList = [
   {
-    question: "This is a test question. The answer is B.",
-    choices: ['A. This answer', 'B. That Answer', 'C. Maybe this one?', 'D. No it\'s totaly this one'],
+    question: "If you want to select a div with a class of 'wrapper' how can you do it?",
+    choices: ["document.getElementById('wrapper')", "document.querySelector('.wrapper')", "document.getElementById('.wrapper')", "document.querySelector('#wrapper')"],
     answer: 1
   },
   {
-    question: "This is a test question. The answer is A.",
-    choices: ['A. This answer', 'B. That Answer', 'C. Maybe this one?', 'D. No it\'s totaly this one'],
+    question: "How would you append an h3 to a div element? Assume both the h3 and div are declared as variables.",
+    choices: ["div.appendChild(h3)", "div.append(h3)", "h3.appendChild(div)", "h3.appead(div)"],
     answer: 0
   },
   {
-    question: "This is a test question. The answer is D.",
-    choices: ['A. This answer', 'B. That Answer', 'C. Maybe this one?', 'D. No it\'s totaly this one'],
+    question: "What is the notation for setInterval?",
+    choices: ["setInterval(interval in seconds, function ())", "setInterval(function(), interval in seconds)", "setInterval(interval in milliseconds, function ())", "setInterval(function(), interval in milliseconds)"],
     answer: 3
   },
   {
-    question: "This is a test question. The answer is A.",
-    choices: ['A. This answer', 'B. That Answer', 'C. Maybe this one?', 'D. No it\'s totaly this one'],
-    answer: 0
+    question: "Which of the following will not work without document. before?",
+    choices: ["document.confirm()", "document.alert()", "document.prompt()", "All work without document."],
+    answer: 3
   },
   {
-    question: "This is a test question. The answer is C.",
-    choices: ['A. This answer', 'B. That Answer', 'C. Maybe this one?', 'D. No it\'s totaly this one'],
+    question: "How would I select the age of the second person in an array of objects, which are formatted like so: {name: \, age: }",
+    choices: ["array.age[2]", "array(1).age", "array[1].age", "array.age[1]"],
     answer: 2
   },
   {
-    question: "This is a test question. The answer is A.",
-    choices: ['A. This answer', 'B. That Answer', 'C. Maybe this one?', 'D. No it\'s totaly this one'],
-    answer: 0
+    question: "Which of these is a valid for loop condition?",
+    choices: ["(var i = 0, i > array.length, i++)", "(var i = 0; i > array.length; i++)", "(var i = 0, i => 5, i++)", "(var i = 0; i < array.length[i] ; i++)"],
+    answer: 1
   }
 ];
 
